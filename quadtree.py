@@ -31,6 +31,7 @@ class QuadTree:
         if(not self.divided):
             if(len(self.boids) < self.capacity or self.depth >= self.maxDepth):
                 self.boids.append(boid)
+                boid.setQuad(self)
             else:
                 self.divide()
         else:
@@ -65,15 +66,15 @@ class QuadTree:
         del(self.boids)
 
 
-    def drawTree(self, window):
+    def drawTree(self, window, color):
         if(self.divided):
-            self.nw.drawTree(window)
-            self.ne.drawTree(window)
-            self.sw.drawTree(window)
-            self.se.drawTree(window)
+            self.nw.drawTree(window, color)
+            self.ne.drawTree(window, color)
+            self.sw.drawTree(window, color)
+            self.se.drawTree(window, color)
         else:
             rect = pygame.Rect(math.ceil(self.area.x - self.area.w / 2)
                                , math.ceil(self.area.y - self.area.h / 2)
                                , math.ceil(self.area.w)
                                , math.ceil(self.area.h))
-            pygame.draw.rect(window,(100,255,100),rect,1)
+            pygame.draw.rect(window,color,rect,1)

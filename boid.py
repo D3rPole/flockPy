@@ -4,8 +4,11 @@ class Boid:
     def __init__(self, win) -> None:
         self.w = win.get_width()
         self.h = win.get_height()
-        self.position = m.Vector2(200 + random.random() * 400,100 + random.random() * 400)
-        self.velocity = m.Vector2(200 - random.random() * 400,200 - random.random() * 400)
+        self.position = m.Vector2(self.w/4 + random.random() * self.w/2, self.h/4 + random.random() * self.h/2)
+        self.velocity = m.Vector2(0,0)
+    
+    def setQuad(self, quad):
+        self.quad = quad
 
     def update(self, dtime):
         self.position += self.velocity * dtime

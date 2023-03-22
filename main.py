@@ -28,14 +28,16 @@ while True:
     boids = f.boids
 
     area = quadtree.rect(midX,midY,w,h)
-    tree = quadtree.QuadTree(area,5,10)
+    tree = quadtree.QuadTree(area,5,100)
     for b in boids:
         tree.addBoid(b)
 
     for b in boids:
         pygame.draw.circle(win,(255,0,0),(b.position.x,b.position.y),2)
 
-    tree.drawTree(win)
+    tree.drawTree(win, (255,100,100))
+
+    boids[0].quad.parent.drawTree(win, (0,255,0))
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
