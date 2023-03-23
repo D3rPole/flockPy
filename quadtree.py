@@ -78,3 +78,9 @@ class QuadTree:
                                , math.ceil(self.area.w)
                                , math.ceil(self.area.h))
             pygame.draw.rect(window,color,rect,1)
+
+    def getBoids(self):
+        if(not self.divided):
+            return self.boids
+        else:
+            return self.nw.getBoids() + self.ne.getBoids() + self.sw.getBoids() + self.se.getBoids()

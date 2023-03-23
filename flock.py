@@ -4,9 +4,9 @@ class Flock:
     flockSize = 0
 
     target = m.Vector2(400,300)
-    targetFactor = 1
-    cohesionFactor = 1
-    seperationFactor = 1
+    targetFactor = 0
+    cohesionFactor = 0
+    seperationFactor = 10
     alignmentFactor = 1
 
     boids = []
@@ -23,10 +23,23 @@ class Flock:
 
     def update(self,dtime):
         for b in self.boids:
+            cohesionForce = m.Vector2()
+            seperationForce = m.Vector2()
+            if(hasattr(b,"quad")):
+                boidInRange = b.quad.parent.getBoids()
+                avrgPos = m.Vector2()
+                for bb in boidInRange:
+                    if(bb != b):
+                        seperationForce += (b.position - bb.position) / b.position.distance_squared_to(bb.position)
+                        avrgPos += bb.position
+                
+                avrgPos = avrgPos / len(boidInRange)
+
+                cohesionForce = (avrgPos - b.position)
 
             targetForce = (self.target - b.position)
 
-            netForce = targetForce * self.targetFactor
+            netForce = targetForce * self.targetFactor + cohesionForce * self.cohesionFactor + seperationForce * self.seperationFactor
 
             b.update(dtime)
             b.applyForce(netForce,dtime)
