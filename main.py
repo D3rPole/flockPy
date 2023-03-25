@@ -1,42 +1,47 @@
 import pygame
 import flock
 import quadtree
+import colorsys
+
+def hsv2rgb(h,s,v):
+    return tuple(round(i * 255) for i in colorsys.hsv_to_rgb(h,s,v))
 
 pygame.init()
 clock = pygame.time.Clock()
+clock2 = pygame.time.Clock()
 
-w = 600
-h = 600
+w = 800
+h = 800
 midX = w / 2
 midY = h / 2
 
 win = pygame.display.set_mode((w, h))
 pygame.display.set_caption("My Game")
 
-f = flock.Flock(1000,win)
+f = flock.Flock(700,win)
 boids = f.boids
 
 font = pygame.font.SysFont("monospace", 24)
 
 while True:
     dTime = clock.get_time() / 1000.0
-    clock.tick(1000)
+    clock.tick(75)
 
     win.fill((0, 0, 0))
 
+
     area = quadtree.rect(midX,midY,w,h)
-    tree = quadtree.QuadTree(area,5,100)
+    tree = quadtree.QuadTree(area,3,10)
     for b in boids:
         tree.addBoid(b)
+    tree.drawTree(win, (50,50,50))
 
     f.update(dTime)
 
+    i = 0
     for b in boids:
-        pygame.draw.circle(win,(255,0,0),(b.position.x,b.position.y),2)
-
-    #tree.drawTree(win, (255,100,100))
-    #boids[0].quad.parent.drawTree(win, (0,255,0))
-
+        i += 1
+        pygame.draw.circle(win,hsv2rgb(i / 700,1,1),(b.position.x,b.position.y),2)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

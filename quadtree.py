@@ -84,3 +84,13 @@ class QuadTree:
             return self.boids
         else:
             return self.nw.getBoids() + self.ne.getBoids() + self.sw.getBoids() + self.se.getBoids()
+        
+    def getBoidsInRadius(self,x,y,radius):
+        distance = math.sqrt((self.area.x - x)**2 + (self.area.y - y)**2)
+        if(distance > radius + math.sqrt(self.area.w**2 + self.area.h**2)):
+            return []
+        
+        if(self.divided):
+            return self.ne.getBoidsInRadius(x,y,radius) + self.nw.getBoidsInRadius(x,y,radius) + self.sw.getBoidsInRadius(x,y,radius) + self.se.getBoidsInRadius(x,y,radius)
+        else:
+            return self.boids
