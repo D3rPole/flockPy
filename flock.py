@@ -4,12 +4,12 @@ class Flock:
     flockSize = 0
 
     target = m.Vector2(400,300)
-    targetFactor = 0.1
+    targetFactor = 0
     cohesionFactor = 2
-    seperationFactor = 1000
+    seperationFactor = 5000
     alignmentFactor = 10
 
-    viewDistance = 100
+    viewDistance = 50
 
     boids = []
 
@@ -28,6 +28,7 @@ class Flock:
             cohesionForce = m.Vector2()
             seperationForce = m.Vector2()
             alignmentForce = m.Vector2()
+            f = m.Vector2()
             if(hasattr(b,"quad")):
                 boidInRange = b.quad.getBoidsInRadius(b.position.x,b.position.y,self.viewDistance)
                 avrgPos = m.Vector2()
@@ -39,13 +40,16 @@ class Flock:
                             seperationForce += (b.position - bb.position) / b.position.distance_squared_to(bb.position)
                             alignmentForce += bb.velocity
                             avrgPos += bb.position
+                
+                if(self.target.distance_to(b.position) < 200000):
+                    f = (b.position - self.target) / self.target.distance_squared_to(b.position)
                 if(i > 0):
                     avrgPos = avrgPos / i
                     cohesionForce = (avrgPos - b.position)
                     alignmentForce = alignmentForce / (len(boidInRange) - 1)
 
             targetForce = (self.target - b.position)
-            netForce = targetForce * self.targetFactor + cohesionForce * self.cohesionFactor + seperationForce * self.seperationFactor + alignmentForce * self.alignmentFactor
+            netForce = f * 10000 + targetForce * self.targetFactor + cohesionForce * self.cohesionFactor + seperationForce * self.seperationFactor + alignmentForce * self.alignmentFactor
             b.update(dtime)
             b.applyForce(netForce,dtime)
 
